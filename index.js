@@ -31,13 +31,59 @@ function registerPlayers(name, balance){
     return _player;
 }
 function unRegisterPlayer(player){
-    arrayRemove(playersArray, player);
+    let indx = playersArray.indexOf(player);
+    playersArray = playersArray.splice(indx, indx+1);
 }
 
 let player_1 = registerPlayers("player 1", 100);
 let player_2 = registerPlayers("player 2", 100);
 console.log("players are %s \n", JSON.stringify(playersArray));
 
-// testing remove
-unRegisterPlayer(player_1);
-console.log("players are %s \n", JSON.stringify(playersArray));
+// // testing remove
+// unRegisterPlayer(player_1);
+// console.log("testing remove - players are %s \n", JSON.stringify(playersArray));
+
+// distribute cards among players
+function distributeCards() {
+    playersArray.forEach( (player, indx, players) => {
+        player.hand.push(shuffled_deck_A[0])
+        shuffled_deck_A.shift();
+        player.hand.push(shuffled_deck_A[0])
+        shuffled_deck_A.shift();
+    });
+}
+
+distributeCards();
+console.log("players hands %s \n", JSON.stringify(playersArray));
+
+console.log("remaining Cards in Deck \n");
+console.log("Shuffled = \n",shuffled_deck_A);
+
+
+// creating the rounds 
+// preflop , flop, turn & river
+
+console.log("Starting preflop round ...\n");
+
+// const numberOfRounds = 3; // ToDo: later
+let tableCardArray = [];
+function distributeOneCardTotable() {
+    tableCardArray.push(shuffled_deck_A[0])
+        shuffled_deck_A.shift();
+}
+function DistributeToTable(roundNumber) {
+    if (roundNumber < 1) {
+        for (let index = 0; index < 3; index++) {
+            distributeOneCardTotable();
+        }
+    } else {
+        distributeOneCardTotable();
+    }
+}
+
+DistributeToTable(0);
+
+console.log("Cards on table = \n", tableCardArray);
+console.log("remaining Cards in Deck \n");
+console.log("Shuffled = \n",shuffled_deck_A);
+
