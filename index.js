@@ -2,6 +2,7 @@ const _ = require("lodash");
 const card = require("./card.js");
 const deck = require("./deck.js");
 const player = require("./player.js");
+const category = require("./category.js")
 
 // functions i might need //
 function arrayRemove(arr, value) {
@@ -26,7 +27,7 @@ console.log("Creating Players\n");
 // create a function for registering players
 let playersArray = [];
 function registerPlayers(name, balance){
-    let _player = player.Player(name, balance, []);
+    let _player = player.Player(name, balance);
     playersArray.push(_player);
     return _player;
 }
@@ -37,6 +38,8 @@ function unRegisterPlayer(player){
 
 let player_1 = registerPlayers("player 1", 100);
 let player_2 = registerPlayers("player 2", 100);
+let player_3 = registerPlayers("player 3", 100);
+let player_4 = registerPlayers("player 4", 100);
 console.log("players are %s \n", JSON.stringify(playersArray));
 
 // // testing remove
@@ -87,3 +90,9 @@ console.log("Cards on table = \n", tableCardArray);
 console.log("remaining Cards in Deck \n");
 console.log("Shuffled = \n",shuffled_deck_A);
 
+// testing category
+console.log("category variable = ", category.Category);
+console.log("category level = ", category.CategoryLevel());
+console.log("player hand category = ", player_1.category);
+console.log("category calc = ", category.CalculateCategory(player_1, tableCardArray));
+console.log("player hand category = ", player_1.category);
