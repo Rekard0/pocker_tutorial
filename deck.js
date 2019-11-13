@@ -1,13 +1,9 @@
 const card = require("./card.js");
 
-// function Card(value, name, suit){
-// 	let card_obj = {"value":value, "name":name, "suit":suit};
-// 	return card_obj;
-// }
+const names = card.Names;
+const suits = card.Suits;
 
 function Deck(){
-	names = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-	suits = ['Hearts','Diamonds','Spades','Clubs'];
 	let cards = [];
 
     suits.forEach(function(suit, i) {
