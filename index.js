@@ -1,8 +1,8 @@
 const _ = require("lodash");
-const card = require("./card.js");
-const deck = require("./deck.js");
-const player = require("./player.js");
-const category = require("./category.js")
+const card = require("./mods/card.js");
+const deck = require("./mods/deck.js");
+const player = require("./mods/player.js");
+const category = require("./mods/category.js")
 
 // functions i might need //
 function arrayRemove(arr, value) {
