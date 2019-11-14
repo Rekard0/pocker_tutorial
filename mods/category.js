@@ -69,7 +69,6 @@ let calculateCategory = (player, tCards) => {
                     break;
                 
                 case 3:
-                    
                     player.category.name = category.three_of_a_kind.name;
                     player.category.level = category.three_of_a_kind.level;
                     player.category.value = spreadCards.find(x => x.value == elem).value;
@@ -86,8 +85,67 @@ let calculateCategory = (player, tCards) => {
             }
         }
     }
+
+    // checking for staright
+    if (player.category.level != 8) { // if hand category is four of a kind dont bother checking for straight
+        // find five consecative cards
+        //////////////////////////////////////// for testing
+        let spreadCards2 = [
+            { value: 13, name: 'K', suit: 'Spades' } ,
+            { value: 12, name: 'Q', suit: 'Spades' } ,
+            { value: 11, name: 'J', suit: 'Spades' } ,
+            { value: 10, name: '10', suit: 'Spades' } ,  
+            { value: 9, name: '9', suit: 'Spades' }
+
+        ]
+        ////////////////////////////////////////
+        console.log("checking for straight ...")
+        let consecativeCounter = {sC:1, sF: 1};
+        let consecativeCards = [];
+        spreadCards2.reduce((prev, curr) => {
+            console.log(prev, " - ",curr);
+            if (prev.value == curr.value +1) {
+                ++consecativeCounter.sC;
+            }
+            if (prev.suit == curr.suit) {
+                ++consecativeCounter.sF;
+            }
+            if (consecativeCards.length != 0) { // creating an array of consecative Cards
+                consecativeCards.push(curr);
+            } else {
+                consecativeCards.push(prev);
+                consecativeCards.push(curr);
+            }
+            
+            console.log("consecativeCounter = ",consecativeCounter);
+            console.log("consecativeCards = ",consecativeCards);
+            return prev = curr;
+        });
+        // assesing straight conditions
+        if (consecativeCounter.sC >= 5 || consecativeCounter.sF > 5) {
+            console.log("entering consecativeCounter")
+            if (consecativeCounter.sC >= 5) {
+                // check if hand has at least one of the 5 cards
+                let matchedHandCardCount = 0;
+                player.hand.forEach(handCard => {
+                    console.log("hand card = ", handCard)
+                    console.log("consecativeCards card = ", consecativeCards)
+                    if (consecativeCards.indexOf(handCard) != -1) { // stuck here: always false ,, i wonder why?
+                        console.log("hand has a card")
+                        ++matchedHandCardCount;
+                    }
+                    console.log("entering hand loop , match count = ", matchedHandCardCount)
+                });
+                if (matchedHandCardCount > 0) {
+                    player.category.name = category.straight.name;
+                    player.category.level = category.straight.level;
+                    player.category.value = consecativeCards[0].value;
+                }
+            }
+        }
+    }
     
-    return spreadCards;
+    return "calculation done...\n";
 }
 
 // compare categories
