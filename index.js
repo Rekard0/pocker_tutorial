@@ -87,11 +87,17 @@ function DistributeToTable(roundNumber) {
 DistributeToTable(0);
 
 console.log("Cards on table = \n", tableCardArray);
-console.log("remaining Cards in Deck \n");
-console.log("Shuffled = \n",shuffled_deck_A);
+// console.log("remaining Cards in Deck \n");
+// console.log("Shuffled = \n",shuffled_deck_A);
 
 // testing category
-console.log("category variable = ", category.Category);
-console.log("player hand category = ", player_1.category);
+// console.log("category variable = ", category.Category);
+// console.log("player hand category = ", player_1.category);
 console.log("category calc = ", category.CalculateCategory(player_1, tableCardArray));
-console.log("player hand category = ", player_1.category);
+console.log("player 1 hand category = ",player_1.hand, "\n", player_1.category);
+console.log("category calc = ", category.CalculateCategory(player_2, tableCardArray));
+console.log("player 2 hand category = ",player_2.hand, "\n", player_2.category);
+console.log("category calc = ", category.CalculateCategory(player_3, tableCardArray));
+console.log("player 3 hand category = ",player_3.hand, "\n", player_3.category);
+console.log("category calc = ", category.CalculateCategory(player_4, tableCardArray));
+console.log("player 4 hand category = ",player_4.hand, "\n", player_4.category);

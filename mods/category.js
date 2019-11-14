@@ -22,18 +22,19 @@ const category = {
 let calculateCategory = (player, tCards) => {
     // get table card and player card and create a spreaded array
     let spreadCards = [...player.hand,...tCards];
-    console.log("unsorted ",spreadCards)
+    // console.log("unsorted ",spreadCards)
     // sorting the cards by its value key .... !!!! i have no idea how it works, but it seems to work
     spreadCards.sort((a, b) => b.value - a.value);
-    console.log("sorted ",spreadCards)
+    // console.log("sorted ",spreadCards)
     // check if the spread form any of the categories
 
-    // checking for high cards
-    if (spreadCards[0].value > 10) {
+    // checking for ----------------- high cards ---------------------
+    let sortedHand = player.hand.sort((a, b) => b.value - a.value);
+    if (sortedHand[0].value > 10) { // check if the hand have potencial of high card
         // then it is high card
         player.category.name = category.high_cards.name;
         player.category.level = category.high_cards.level;
-        player.category.value = spreadCards[0].value;
+        player.category.value = sortedHand[0].value;
     }
 
     //checking for the same kinds by value
@@ -43,42 +44,46 @@ let calculateCategory = (player, tCards) => {
         sameObj[card.value] = (sameObj[card.value]||0) + 1;
         // console.log(sameObj); // for seeing what it is doing
     });
-    console.log("same kinds = ", sameObj);
-    // checking for one & two pair and same kinds
+    // console.log("same kinds = ", sameObj);
+    // checking for -------- one & two pair and same kinds -------------
     let pairCounter = 0;
     for(elem in sameObj){
         // console.log("entering for... ", elem)
-        switch (sameObj[elem]) {
-            case 2:
-                // console.log("2 trigured")
-                player.category.name = category.one_pair.name;
-                let valuCard = spreadCards.find(x => x.value == elem);
-                // console.log("valueCard =", valuCard); 
-                player.category.level = category.one_pair.level;
-                player.category.value = valuCard.value
+        let valuCard = spreadCards.find(x => x.value == elem);
+        if (player.hand.indexOf(valuCard)  != -1) { // if object is in hand
+            switch (sameObj[elem]) {
+                case 2:
+                    // console.log("2 trigured")   
+                    player.category.name = category.one_pair.name;
+                    // console.log("valueCard =", valuCard); 
+                    player.category.level = category.one_pair.level;
+                    player.category.value = valuCard.value
 
-                // should have a way of checking for 2 pairs
-                pairCounter++
-                if (pairCounter == 2) { // == 2 prevent from count for more pairs if table has more 3 card in the next round
-                    player.category.name = category.two_pair.name; 
-                    player.category.level = category.two_pair.level;
-                }
-                break;
+                    // should have a way of checking for 2 pairs
+                    pairCounter++
+                    if (pairCounter == 2) { // == 2 prevent from count for more pairs if table has more 3 card in the next round
+                        player.category.name = category.two_pair.name; 
+                        player.category.level = category.two_pair.level;
+                    }
+                    
+                    break;
+                
+                case 3:
+                    
+                    player.category.name = category.three_of_a_kind.name;
+                    player.category.level = category.three_of_a_kind.level;
+                    player.category.value = spreadCards.find(x => x.value == elem).value;
+                    break;
+
+                case 4:
+                    player.category.name = category.four_of_a_kind.name;
+                    player.category.level = category.four_of_a_kind.level;
+                    player.category.value = spreadCards.find(x => x.value == elem).value;
+                    break;
             
-            case 3:
-                player.category.name = category.three_of_a_kind.name;
-                player.category.level = category.three_of_a_kind.level;
-                player.category.value = spreadCards.find(x => x.value == elem).value;
-                break;
-
-            case 4:
-                player.category.name = category.four_of_a_kind.name;
-                player.category.level = category.four_of_a_kind.level;
-                player.category.value = spreadCards.find(x => x.value == elem).value;
-                break;
-        
-            default:
-                break;
+                default:
+                    break;
+            }
         }
     }
     
