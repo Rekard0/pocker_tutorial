@@ -92,7 +92,6 @@ console.log("Shuffled = \n",shuffled_deck_A);
 
 // testing category
 console.log("category variable = ", category.Category);
-console.log("category level = ", category.CategoryLevel());
 console.log("player hand category = ", player_1.category);
 console.log("category calc = ", category.CalculateCategory(player_1, tableCardArray));
 console.log("player hand category = ", player_1.category);

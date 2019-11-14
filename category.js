@@ -6,27 +6,17 @@ const suits = card.Suits;
 // define categories
 // high_cards , one_pair , two_pair , three_of_a_kind , straight , flush , full_house , four_of_a_kind , stright_flush , royal_flush
 const category = {
-    high_cards : "High Cards",
-    one_pair : "One Pair",
-    two_pair : "Two Pair",
-    three_of_a_kind : "Three Of A Kind",
-    straight : "Straight",
-    flush : "Flush",
-    full_house : "Full House",
-    four_of_a_kind : "Four Of A Kind",
-    stright_flush : "Stright Flush",
-    royal_flush : "Royal Flush"
+    high_cards : {name: "High Cards", level: 1},
+    one_pair : {name: "One Pair", level: 2},
+    two_pair : {name: "Two Pair", level: 3},
+    three_of_a_kind : {name: "Three Of A Kind", level: 4},
+    straight : {name: "Straight", level: 5},
+    flush : {name: "Flush", level: 6},
+    full_house : {name: "Full House", level: 7},
+    four_of_a_kind : {name: "Four Of A Kind", level: 8},
+    stright_flush : {name: "Stright Flush", level: 9},
+    royal_flush : {name: "Royal Flush", level: 10}
 }
-
-let categoryLevel = () => {
-    let levels = [];
-    let counter = 0;
-    for(elem in category) {
-        levels.push({key: elem, level: ++counter});
-    }
-    return levels;
-}
-
 
 // calculate category
 let calculateCategory = (player, tCards) => {
@@ -41,8 +31,8 @@ let calculateCategory = (player, tCards) => {
     // checking for high cards
     if (spreadCards[0].value > 10) {
         // then it is high card
-        player.category.name = category.high_cards;
-        player.category.level = categoryLevel().find(x => x.key == "high_cards").level;
+        player.category.name = category.high_cards.name;
+        player.category.level = category.high_cards.level;
         player.category.value = spreadCards[0].value;
     }
 
@@ -51,33 +41,39 @@ let calculateCategory = (player, tCards) => {
     let sameObj = {};
     spreadCards.forEach((card) => { 
         sameObj[card.value] = (sameObj[card.value]||0) + 1;
-        console.log(sameObj);
+        // console.log(sameObj); // for seeing what it is doing
     });
     console.log("same kinds = ", sameObj);
-    // checking for
+    // checking for one & two pair and same kinds
+    let pairCounter = 0;
     for(elem in sameObj){
-        console.log("entering for... ", elem)
+        // console.log("entering for... ", elem)
         switch (sameObj[elem]) {
             case 2:
-                console.log("2 trigured")
-                let searching42pair = {};
-                // should have a way for checking for 2 pairs
-                player.category.name = category.one_pair;
+                // console.log("2 trigured")
+                player.category.name = category.one_pair.name;
                 let valuCard = spreadCards.find(x => x.value == elem);
                 // console.log("valueCard =", valuCard); 
-                player.category.level = categoryLevel().find(x => x.key == "one_pair").level;
+                player.category.level = category.one_pair.level;
                 player.category.value = valuCard.value
+
+                // should have a way of checking for 2 pairs
+                pairCounter++
+                if (pairCounter == 2) { // == 2 prevent from count for more pairs if table has more 3 card in the next round
+                    player.category.name = category.two_pair.name; 
+                    player.category.level = category.two_pair.level;
+                }
                 break;
             
             case 3:
-                player.category.name = category.three_of_a_kind;
-                player.category.level = categoryLevel().find(x => x.key == "three_of_a_kind").level;
-                player.category.value = spreadCards.find(x => x.value == elem).value; // TypeError: Cannot read property 'value' of undefined 
+                player.category.name = category.three_of_a_kind.name;
+                player.category.level = category.three_of_a_kind.level;
+                player.category.value = spreadCards.find(x => x.value == elem).value;
                 break;
 
             case 4:
-                player.category.name = category.four_of_a_kind;
-                player.category.level = categoryLevel().find(x => x.key == "four_of_a_kind").level;
+                player.category.name = category.four_of_a_kind.name;
+                player.category.level = category.four_of_a_kind.level;
                 player.category.value = spreadCards.find(x => x.value == elem).value;
                 break;
         
@@ -93,5 +89,4 @@ let calculateCategory = (player, tCards) => {
 
 
 exports.Category = category;
-exports.CategoryLevel = categoryLevel;
 exports.CalculateCategory = calculateCategory;
