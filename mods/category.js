@@ -145,27 +145,52 @@ let calculateCategory = (player, tCards) => {
             }
             // ----------------- flush ---------------------
             if (consecativeCounter.sF >= 5 && matchedHandCardCount > 0 && consecativeCounter.sC < 5) {
+                let suitCount = {};
+                let suitList = []
+                spreadCards2.forEach(function(i) { suitCount[i.suit] = (suitCount[i.suit]||0) + 1;});
+                // console.log(suitCount);
+                for(elem in suitCount){
+                    let a = {}
+                    a.name = elem;
+                    a.count = suitCount[elem];
+                    suitList.push(a);
+                }
+                // console.log(suitList);
+                suitList.sort((a, b) => b.count - a.count);
+                // console.log("sorting suitList = ", suitList)
                 player.category.name = category.flush.name;
                 player.category.level = category.flush.level;
-                player.category.value = sortedHand[0].value; // TODO: this is wrong
+                // console.log(sortedHand)
+                // player.category.value = sortedHand[0].value; // TODO: this is wrong
+                let value = 0;
+                let sortedHandCopy = _.clone(sortedHand).sort((a, b) => a.value - b.value); // needed for geting correct hand value in case of having 2 suit in the hand
+                // console.log("sortedHandCopy =",sortedHandCopy)
+                sortedHandCopy.forEach(elem => {
+                    if (elem.suit == suitList[0].name) {
+                        value = elem.value;
+                    }
+                });
+                player.category.value = value;
             }
         }
+        // ----------------- full house ---------------------
     }
-            // ----------------- stright_flush ---------------------
-            if (consecativeCounter.sF >= 5 && matchedHandCardCount > 0 && consecativeCounter.sC >= 5) {
-                
-                    if (sortedHand[0].value == 14) {
-                        // ----------------- royal_flush ---------------------
-                        player.category.name = category.royal_flush.name;
-                        player.category.level = category.royal_flush.level;
-                        player.category.value = sortedHand[0].value;
-                    } else {
-                        player.category.name = category.stright_flush.name;
-                        player.category.level = category.stright_flush.level;
-                        player.category.value = sortedHand[0].value;
-                    }
-                
+    
+    // ----------------- stright_flush ---------------------
+    if (consecativeCounter.sF >= 5 && matchedHandCardCount > 0 && consecativeCounter.sC >= 5) {
+        
+            if (sortedHand[0].value == 14) {
+                // ----------------- royal_flush ---------------------
+                player.category.name = category.royal_flush.name;
+                player.category.level = category.royal_flush.level;
+                player.category.value = sortedHand[0].value;
+            } else {
+                player.category.name = category.stright_flush.name;
+                player.category.level = category.stright_flush.level;
+                player.category.value = sortedHand[0].value;
             }
+        
+    }
             
         //}
     //}
