@@ -18,10 +18,10 @@ let deck_A = deck.Deck();
 
 console.log("Creating Deck...\n");
 console.log("non-shuffled:\n");
-console.log(deck_A);
+// console.log(deck_A);
 
 let shuffled_deck_A = deck.Suffle(deck_A);
-console.log("Shuffled = \n",shuffled_deck_A);
+// console.log("Shuffled = \n",shuffled_deck_A);
 
 console.log("Creating Players\n");
 // create a function for registering players
@@ -40,7 +40,7 @@ let player_1 = registerPlayers("player 1", 100);
 let player_2 = registerPlayers("player 2", 100);
 let player_3 = registerPlayers("player 3", 100);
 let player_4 = registerPlayers("player 4", 100);
-console.log("players are %s \n", JSON.stringify(playersArray));
+// console.log("players are %s \n", JSON.stringify(playersArray));
 
 // // testing remove
 // unRegisterPlayer(player_1);
@@ -57,10 +57,10 @@ function distributeCards() {
 }
 
 distributeCards();
-console.log("players hands %s \n", JSON.stringify(playersArray));
+// console.log("players hands %s \n", JSON.stringify(playersArray));
 
-console.log("remaining Cards in Deck \n");
-console.log("Shuffled = \n",shuffled_deck_A);
+// console.log("remaining Cards in Deck \n");
+// console.log("Shuffled = \n",shuffled_deck_A);
 
 
 // creating the rounds 
@@ -94,10 +94,10 @@ console.log("Cards on table = \n", tableCardArray);
 // console.log("category variable = ", category.Category);
 // console.log("player hand category = ", player_1.category);
 console.log("category calc = ", category.CalculateCategory(player_1, tableCardArray));
-// console.log("player 1 hand category = ",player_1.hand, "\n", player_1.category);
+console.log("player 1 hand category = ",player_1.hand, "\n", player_1.category);
 console.log("category calc = ", category.CalculateCategory(player_2, tableCardArray));
-// console.log("player 2 hand category = ",player_2.hand, "\n", player_2.category);
+console.log("player 2 hand category = ",player_2.hand, "\n", player_2.category);
 console.log("category calc = ", category.CalculateCategory(player_3, tableCardArray));
-// console.log("player 3 hand category = ",player_3.hand, "\n", player_3.category);
-console.log("category calc = ", category.CalculateCategory(player_4, tableCardArray));
+console.log("player 3 hand category = ",player_3.hand, "\n", player_3.category);
+console.log("category 4 = ", category.CalculateCategory(player_4, tableCardArray));
 console.log("player 4 hand category = ",player_4.hand, "\n", player_4.category);

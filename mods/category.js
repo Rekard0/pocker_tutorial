@@ -66,7 +66,6 @@ let calculateCategory = (player, tCards) => {
                         player.category.name = category.two_pair.name; 
                         player.category.level = category.two_pair.level;
                     }
-                    
                     break;
                 
                 case 3:
@@ -90,22 +89,25 @@ let calculateCategory = (player, tCards) => {
     }
 
     // checking for staright
+    let consecativeCounter = {sC:1, sF: 1};
+    let consecativeCards = [];
+    let matchedHandCardCount = 0;
     if (player.category.level != 8) { // if hand category is four of a kind dont bother checking for straight
         // find five consecative cards
         //////////////////////////////////////// for testing
         let spreadCards2 = [
-            { value: 13, name: 'K', suit: 'Spades' } ,
-            { value: 12, name: 'Q', suit: 'Spades' } ,
+            { value: 11, name: 'J', suit: 'Club' } ,
+            { value: 8, name: '8', suit: 'Club' }  ,
+            { value: 4, name: '4', suit: 'Spades' } ,
+            { value: 5, name: '5', suit: 'Spades' } ,
+            { value: 2, name: '2', suit: 'Spades' } ,
             { value: 11, name: 'J', suit: 'Spades' } ,
-            { value: 10, name: '10', suit: 'Clubs' } ,  
-            { value: 9, name: '9', suit: 'Clubs' }
-
+            { value: 8, name: '8', suit: 'Spades' }  
+            
         ]
         ////////////////////////////////////////
         // console.log("checking for straight ...")
-        let consecativeCounter = {sC:1, sF: 1};
-        let consecativeCards = [];
-        spreadCards.reduce((prev, curr) => {
+        spreadCards2.reduce((prev, curr) => {
             // console.log(prev, " - ",curr);
             if (prev.value == curr.value +1) {
                 ++consecativeCounter.sC;
@@ -127,34 +129,48 @@ let calculateCategory = (player, tCards) => {
         // assesing straight conditions
         if (consecativeCounter.sC >= 5 || consecativeCounter.sF >= 5) {
             // check if hand has at least one of the 5 cards
-            let matchedHandCardCount = 0;
+            
             player.hand.forEach(handCard => {
-                if (_.findIndex(consecativeCards, handCard)) { // stuck here: "consecativeCards.indexOf(handCard) != -1" always false ,, i wonder why? using lodash instead
+                if (_.findIndex(consecativeCards, handCard) != -1) { // stuck here: "consecativeCards.indexOf(handCard) != -1" always false ,, i wonder why? using lodash instead
                     // console.log("hand has a card")
                     ++matchedHandCardCount;
                 }
-                console.log("entering hand loop , match count = ", matchedHandCardCount)
+                // console.log("entering hand loop , match count = ", matchedHandCardCount)
             });
             // ----------------- straight ---------------------
-            if (consecativeCounter.sC >= 5) { 
-                if (matchedHandCardCount > 0) {
-                    player.category.name = category.straight.name;
-                    player.category.level = category.straight.level;
-                    player.category.value = sortedHand[0].value;
-                }
-
+            if (consecativeCounter.sC >= 5 && matchedHandCardCount > 0) { 
+                player.category.name = category.straight.name;
+                player.category.level = category.straight.level;
+                player.category.value = sortedHand[0].value;
             }
-            // ----------------- stright_flush ---------------------
-            if (consecativeCounter.sF >= 5) {
-                if (matchedHandCardCount > 0) {
-                    player.category.name = category.stright_flush.name;
-                    player.category.level = category.stright_flush.level;
-                    player.category.value = sortedHand[0].value;
-                }
-
+            // ----------------- flush ---------------------
+            if (consecativeCounter.sF >= 5 && matchedHandCardCount > 0 && consecativeCounter.sC < 5) {
+                player.category.name = category.flush.name;
+                player.category.level = category.flush.level;
+                player.category.value = sortedHand[0].value; // TODO: this is wrong
             }
         }
     }
+            // ----------------- stright_flush ---------------------
+            if (consecativeCounter.sF >= 5 && matchedHandCardCount > 0 && consecativeCounter.sC >= 5) {
+                
+                    if (sortedHand[0].value == 14) {
+                        // ----------------- royal_flush ---------------------
+                        player.category.name = category.royal_flush.name;
+                        player.category.level = category.royal_flush.level;
+                        player.category.value = sortedHand[0].value;
+                    } else {
+                        player.category.name = category.stright_flush.name;
+                        player.category.level = category.stright_flush.level;
+                        player.category.value = sortedHand[0].value;
+                    }
+                
+            }
+            
+        //}
+    //}
+
+    // checking for full house
     
     return "calculation done...\n";
 }
