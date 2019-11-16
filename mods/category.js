@@ -94,20 +94,8 @@ let calculateCategory = (player, tCards) => {
     let matchedHandCardCount = 0;
     if (player.category.level != 8) { // if hand category is four of a kind dont bother checking for straight
         // find five consecative cards
-        //////////////////////////////////////// for testing
-        let spreadCards2 = [
-            { value: 11, name: 'J', suit: 'Club' } ,
-            { value: 8, name: '8', suit: 'Club' }  ,
-            { value: 4, name: '4', suit: 'Spades' } ,
-            { value: 5, name: '5', suit: 'Spades' } ,
-            { value: 2, name: '2', suit: 'Spades' } ,
-            { value: 11, name: 'J', suit: 'Spades' } ,
-            { value: 8, name: '8', suit: 'Spades' }  
-            
-        ]
-        ////////////////////////////////////////
         // console.log("checking for straight ...")
-        spreadCards2.reduce((prev, curr) => {
+        spreadCards.reduce((prev, curr) => {
             // console.log(prev, " - ",curr);
             if (prev.value == curr.value +1) {
                 ++consecativeCounter.sC;
@@ -137,7 +125,7 @@ let calculateCategory = (player, tCards) => {
                 }
                 // console.log("entering hand loop , match count = ", matchedHandCardCount)
             });
-            // ----------------- straight ---------------------
+            // ----------------- straight --------------------- // TODO: does not account for A23453
             if (consecativeCounter.sC >= 5 && matchedHandCardCount > 0) { 
                 player.category.name = category.straight.name;
                 player.category.level = category.straight.level;
@@ -147,7 +135,7 @@ let calculateCategory = (player, tCards) => {
             if (consecativeCounter.sF >= 5 && matchedHandCardCount > 0 && consecativeCounter.sC < 5) {
                 let suitCount = {};
                 let suitList = []
-                spreadCards2.forEach(function(i) { suitCount[i.suit] = (suitCount[i.suit]||0) + 1;});
+                spreadCards.forEach(function(i) { suitCount[i.suit] = (suitCount[i.suit]||0) + 1;});
                 // console.log(suitCount);
                 for(elem in suitCount){
                     let a = {}
@@ -174,6 +162,43 @@ let calculateCategory = (player, tCards) => {
             }
         }
         // ----------------- full house ---------------------
+        let fHouseSameObj = [];
+        for(elem in sameObj){
+            fHouseSameObj.push({name: elem, value: sameObj[elem]});
+        }
+        fHouseSameObj.sort((a, b) => b.value - a.value);
+        console.log("full house same elem = ",fHouseSameObj);
+        let haveDoubleInHand = false;
+        let haveTripleInHand = false;
+        fHouseSameObj.forEach(item => {
+            switch (item.value) {
+                case 2:
+                    player.hand.forEach(card => {
+                        if (card.name == item.name) {
+                            haveDoubleInHand = true;
+                        }
+                    });
+                    break;
+                
+                case 3:
+                    player.hand.forEach(card => {
+                        if (card.name == item.name) {
+                            haveTripleInHand = true;
+                        }
+                    });
+                    break;
+            
+                default:
+                    break;
+            }
+        });
+        console.log("inhand checkers = ", haveDoubleInHand, haveTripleInHand);
+        if (haveDoubleInHand && haveTripleInHand) {
+            player.category.name = category.full_house.name;
+            player.category.level = category.full_house.level;
+            player.category.value = sortedHand[0].value;
+        }
+        
     }
     
     // ----------------- stright_flush ---------------------

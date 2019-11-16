@@ -99,5 +99,19 @@ console.log("category calc = ", category.CalculateCategory(player_2, tableCardAr
 console.log("player 2 hand category = ",player_2.hand, "\n", player_2.category);
 console.log("category calc = ", category.CalculateCategory(player_3, tableCardArray));
 console.log("player 3 hand category = ",player_3.hand, "\n", player_3.category);
-console.log("category 4 = ", category.CalculateCategory(player_4, tableCardArray));
+//////////////////////////////////////// for testing
+let tableCardArray2 = [
+    { value: 7, name: '7', suit: 'Club' }  ,
+    { value: 7, name: '7', suit: 'Spades' } ,
+    { value: 5, name: '5', suit: 'Clubs' } ,
+    { value: 4, name: '4', suit: 'Diamonds' } ,
+    { value: 10, name: '10', suit: 'Diamonds' }  
+    
+]
+////////////////////////////////////////
+player_4.hand = [
+    { value: 7, name: '7', suit: 'Hearts' } ,
+    { value: 5, name: '5', suit: 'Spades' } 
+];
+console.log("category 4 = ", category.CalculateCategory(player_4, tableCardArray2));
 console.log("player 4 hand category = ",player_4.hand, "\n", player_4.category);
