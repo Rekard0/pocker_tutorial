@@ -9,7 +9,7 @@ let compairPlayers = (playerArray) => {
     let levelWinner = Math.max(...arrayOfLevels);
     let winner = [];
     if (levelWinner == 0) {
-        return "NOWINNER";
+        return ["NOWINNER"];
     } else {
         playerArray.forEach(player => {                                 //get highest level
             if (player.category.level == levelWinner) {
@@ -40,11 +40,14 @@ let compairPlayers = (playerArray) => {
                     playerHandSum.push(handSum);
                 });
                 handSumWinner = Math.max(...playerHandSum);
-                return valueWinner[playerHandSum.indexOf(handSumWinner)];            
+                // console.log("=== return type handSumWinner === \n",valueWinner[playerHandSum.indexOf(handSumWinner)])
+                return [valueWinner[playerHandSum.indexOf(handSumWinner)]];            
             } else {
+                // console.log("=== return type valueWinner === \n",valueWinner)
             return valueWinner;
             }
         } else {
+            // console.log("=== return type winner === \n",winner)
             return winner;
         }
     }
