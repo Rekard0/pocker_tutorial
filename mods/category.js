@@ -1,8 +1,5 @@
-const card = require("./card.js");
 const _ = require("lodash");
 
-const names = card.Names;
-const suits = card.Suits;
 
 // define categories
 // high_cards , one_pair , two_pair , three_of_a_kind , straight , flush , full_house , four_of_a_kind , stright_flush , royal_flush

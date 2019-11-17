@@ -1,8 +1,8 @@
 const _ = require("lodash");
-const card = require("./mods/card.js");
 const deck = require("./mods/deck.js");
 const player = require("./mods/player.js");
-const category = require("./mods/category.js")
+const category = require("./mods/category.js");
+const winner = require("./mods/winner.js");
 
 // functions i might need //
 function arrayRemove(arr, value) {
@@ -109,9 +109,11 @@ let tableCardArray2 = [
     
 ]
 ////////////////////////////////////////
-player_4.hand = [
-    { value: 7, name: '7', suit: 'Hearts' } ,
-    { value: 5, name: '5', suit: 'Spades' } 
-];
-console.log("category 4 = ", category.CalculateCategory(player_4, tableCardArray2));
+// player_4.hand = [
+//     { value: 7, name: '7', suit: 'Hearts' } ,
+//     { value: 5, name: '5', suit: 'Spades' } 
+// ];
+console.log("category 4 = ", category.CalculateCategory(player_4, tableCardArray));
 console.log("player 4 hand category = ",player_4.hand, "\n", player_4.category);
+console.log("player 4  = ",player_4)
+console.log("winner = ", winner.CompairPlayers(playersArray));
