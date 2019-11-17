@@ -5,12 +5,10 @@ let compairPlayers = (playerArray) => {
     playerArray.forEach(player => {
         arrayOfLevels.push(player.category.level);
     });
-    console.log("Arrays for compare = ", arrayOfLevels, arrayOfHandValues);
+    // console.log("Arrays for compare = ", arrayOfLevels);
     let levelWinner = Math.max(...arrayOfLevels);
     let winner = [];
     if (levelWinner == 0) {
-        // let winner2 = [1];
-        // console.log("winner length after init = ",winner2.length);
         return "NOWINNER";
     } else {
         playerArray.forEach(player => {                                 //get highest level
@@ -18,7 +16,7 @@ let compairPlayers = (playerArray) => {
                 winner.push(player);
             }
         });
-        console.log("winner length = ",winner.length);
+        // console.log("winner length = ",winner.length);
         if (winner.length != 1) {
             var arrayOfHandValues = [];
             winner.forEach(player => {
