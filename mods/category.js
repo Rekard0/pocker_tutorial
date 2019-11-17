@@ -1,5 +1,5 @@
 const _ = require("lodash");
-
+const l = require("./logging.js");
 
 // define categories
 // high_cards , one_pair , two_pair , three_of_a_kind , straight , flush , full_house , four_of_a_kind , stright_flush , royal_flush
@@ -20,10 +20,10 @@ const category = {
 let calculateCategory = (player, tCards) => {
     // get table card and player card and create a spreaded array
     let spreadCards = [...player.hand,...tCards];
-    // console.log("unsorted ",spreadCards)
+    l.Logger("unsorted ",spreadCards)
     // sorting the cards by its value key .... !!!! i have no idea how it works, but it seems to work
     spreadCards.sort((a, b) => b.value - a.value);
-    // console.log("sorted ",spreadCards)
+    l.Logger("sorted ",spreadCards)
     // check if the spread form any of the categories
 
     // checking for ----------------- high cards ---------------------
@@ -40,20 +40,20 @@ let calculateCategory = (player, tCards) => {
     let sameObj = {};
     spreadCards.forEach((card) => { 
         sameObj[card.value] = (sameObj[card.value]||0) + 1;
-        // console.log(sameObj); // for seeing what it is doing
+        l.Logger(sameObj); // for seeing what it is doing
     });
-    // console.log("same kinds = ", sameObj);
+    l.Logger("same kinds = ", sameObj);
     // checking for -------- one & two pair and same kinds -------------
     let pairCounter = 0;
     for(elem in sameObj){
-        // console.log("entering for... ", elem)
+        l.Logger("entering for... ", elem)
         let valuCard = spreadCards.find(x => x.value == elem);
         if (player.hand.indexOf(valuCard)  != -1) { // if object is in hand
             switch (sameObj[elem]) {
                 case 2:
-                    // console.log("2 trigured")   
+                    l.Logger("2 trigured")   
                     player.category.name = category.one_pair.name;
-                    // console.log("valueCard =", valuCard); 
+                    l.Logger("valueCard =", valuCard); 
                     player.category.level = category.one_pair.level;
                     player.category.value = valuCard.value
 
@@ -91,9 +91,9 @@ let calculateCategory = (player, tCards) => {
     let matchedHandCardCount = 0;
     if (player.category.level != 8) { // if hand category is four of a kind dont bother checking for straight
         // find five consecative cards
-        // console.log("checking for straight ...")
+        l.Logger("checking for straight ...")
         spreadCards.reduce((prev, curr) => {
-            // console.log(prev, " - ",curr);
+            l.Logger(prev, " - ",curr);
             if (prev.value == curr.value +1) {
                 ++consecativeCounter.sC;
             }
@@ -107,8 +107,8 @@ let calculateCategory = (player, tCards) => {
                 consecativeCards.push(curr);
             }
             
-            // console.log("consecativeCounter = ",consecativeCounter);
-            // console.log("consecativeCards = ",consecativeCards);
+            l.Logger("consecativeCounter = ",consecativeCounter);
+            l.Logger("consecativeCards = ",consecativeCards);
             return prev = curr;
         });
         // assesing straight conditions
@@ -117,10 +117,10 @@ let calculateCategory = (player, tCards) => {
             
             player.hand.forEach(handCard => {
                 if (_.findIndex(consecativeCards, handCard) != -1) { // stuck here: "consecativeCards.indexOf(handCard) != -1" always false ,, i wonder why? using lodash instead
-                    // console.log("hand has a card")
+                    l.Logger("hand has a card")
                     ++matchedHandCardCount;
                 }
-                // console.log("entering hand loop , match count = ", matchedHandCardCount)
+                l.Logger("entering hand loop , match count = ", matchedHandCardCount)
             });
             // ----------------- straight --------------------- // TODO: does not account for A23453
             if (consecativeCounter.sC >= 5 && matchedHandCardCount > 0) { 
@@ -133,23 +133,23 @@ let calculateCategory = (player, tCards) => {
                 let suitCount = {};
                 let suitList = []
                 spreadCards.forEach(function(i) { suitCount[i.suit] = (suitCount[i.suit]||0) + 1;});
-                // console.log(suitCount);
+                l.Logger(suitCount);
                 for(elem in suitCount){
                     let a = {}
                     a.name = elem;
                     a.count = suitCount[elem];
                     suitList.push(a);
                 }
-                // console.log(suitList);
+                l.Logger(suitList);
                 suitList.sort((a, b) => b.count - a.count);
-                // console.log("sorting suitList = ", suitList)
+                l.Logger("sorting suitList = ", suitList)
                 player.category.name = category.flush.name;
                 player.category.level = category.flush.level;
-                // console.log(sortedHand)
+                l.Logger(sortedHand)
                 // player.category.value = sortedHand[0].value; // TODO: this is wrong
                 let value = 0;
                 let sortedHandCopy = _.clone(sortedHand).sort((a, b) => a.value - b.value); // needed for geting correct hand value in case of having 2 suit in the hand
-                // console.log("sortedHandCopy =",sortedHandCopy)
+                l.Logger("sortedHandCopy =",sortedHandCopy)
                 sortedHandCopy.forEach(elem => {
                     if (elem.suit == suitList[0].name) {
                         value = elem.value;
@@ -164,7 +164,7 @@ let calculateCategory = (player, tCards) => {
             fHouseSameObj.push({name: elem, value: sameObj[elem]});
         }
         fHouseSameObj.sort((a, b) => b.value - a.value);
-        console.log("full house same elem = ",fHouseSameObj);
+        l.Logger("full house same elem = ",fHouseSameObj);
         let haveDoubleInHand = false;
         let haveTripleInHand = false;
         fHouseSameObj.forEach(item => {
@@ -189,7 +189,7 @@ let calculateCategory = (player, tCards) => {
                     break;
             }
         });
-        console.log("inhand checkers = ", haveDoubleInHand, haveTripleInHand);
+        l.Logger("inhand checkers = ", haveDoubleInHand, haveTripleInHand);
         if (haveDoubleInHand && haveTripleInHand) {
             player.category.name = category.full_house.name;
             player.category.level = category.full_house.level;

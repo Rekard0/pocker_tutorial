@@ -1,10 +1,11 @@
-const _ = require("lodash");
 const deck = require("./mods/deck.js");
 const utils = require("./mods/utils.js");
 const category = require("./mods/category.js");
 const winner = require("./mods/winner.js");
+const l = require("./mods/logging.js");
 
 let numberOfPlayers = 6;
+let playerInitialFund = 100;
 let deck_A = deck.Deck();
 let playersArray = [];
 let tableCardArray = [];
@@ -16,66 +17,80 @@ let rounds = [
 ];
 let tableFund = 0;
 
-console.log("Creating Deck...\n");
-console.log("non-shuffled:\n");
-// console.log(deck_A);
+console.log(`Starting Pocker Simulation...\n if more logging needed set should log to true in logging.js`);
+l.Logger("non-shuffled:\n");
+l.Logger(deck_A);
 
 let shuffled_deck = deck.Suffle(deck_A);
-// console.log("Shuffled = \n",shuffled_deck_A);
+l.Logger("Shuffled = \n",shuffled_deck);
 
-console.log("Creating Players\n");
+console.log(`Creating ${numberOfPlayers} Players\n`);
 // create a function for registering players
 for (let index = 0; index < numberOfPlayers; index++) {
-    utils.RegisterPlayers("player " + index, 100, playersArray);
+    utils.RegisterPlayers("player " + index, playerInitialFund, playersArray);
 }
 
-// console.log("players are %s \n", JSON.stringify(playersArray));
-
-// distribute cards among players
-utils.DistributeCards(playersArray, shuffled_deck);
-// console.log("players hands %s \n", JSON.stringify(playersArray));
-// console.log("remaining Cards in Deck \n");
-// console.log("Shuffled = \n",shuffled_deck_A);
+l.Logger("players hands %s \n", JSON.stringify(playersArray));
+l.Logger("remaining Cards in Deck \n");
+l.Logger("Shuffled = \n",shuffled_deck);
 
 // creating the rounds
 let finalWinner = () => {
         let roundWinner;
         rounds.forEach((round, number) => {
-        console.log("Starting ...", round)
+        l.Logger("Starting ...", round)
         utils.DistributeToTable(number, tableCardArray, shuffled_deck);
-        console.log("Cards on table = \n", tableCardArray);
+        l.Logger("Cards on table = \n", tableCardArray);
         playersArray.forEach(player => {
             let bet = utils.RandomNumberInRange(5,15); // lets force player to raise every time
-            console.log(bet)
+            l.Logger(bet)
             if (player.balance >= bet) {
                 player.balance -= bet;
                 tableFund += bet;
-                console.log("=== Assesing player hand === \n", category.CalculateCategory(player, tableCardArray));
-                console.log("=== Player hand ===\n", player.hand, "=== and its catagory ===\n", player.category);
+                l.Logger("=== Assesing player hand === \n");
+                category.CalculateCategory(player, tableCardArray)
+                l.Logger("=== Player hand ===\n", player.hand, "=== and its catagory ===\n", player.category);
             } else {
                 utils.UnRegisterPlayer(player, playersArray);
             }
-            console.log(player)
+            l.Logger(player)
         });
         roundWinner = winner.CompairPlayers(playersArray);
-        console.log("=== Table Fund === \n", tableFund);
+        l.Logger("=== Table Fund === \n", tableFund);
         
     });
-    console.log("=== Round Winner === \n", roundWinner);
+    l.Logger("=== Round Winner === \n", roundWinner);
     return roundWinner[0];
 }
 
-let winnerObj = finalWinner();
-console.log("=== Winner OBJ === \n",winnerObj)
+// play while 1 player left && deck have enough cards
+let gameCount = 0;
+while (deck_A.length > (numberOfPlayers * 2) + 6 && playersArray.length > 1) {
+    
+    ++gameCount;
+    console.log("============================================\nGame No. ", gameCount);
+    // clean players hand
+    playersArray.map(player => {
+        player.hand = [];
+    }); 
+    // clean table
+    tableCardArray = [];
+    // distribute cards among players
+    utils.DistributeCards(playersArray, shuffled_deck);
 
-if (winnerObj != "NOWINNER") {
-    playersArray.forEach(player => {
-        if (player.name == winnerObj.name) {
-            player.balance += tableFund;
-        }
-    });
-    tableFund = 0;
-    console.log("=== players left === \n", playersArray.length);
-    console.log("=== River Round Winner === \n", winnerObj);
+    let winnerObj = finalWinner();
+    l.Logger("=== Winner OBJ === \n",winnerObj)
+    console.log("=== Table Fund === \n", tableFund);
+    if (winnerObj != "NOWINNER") {
+        playersArray.forEach(player => {
+            if (player.name == winnerObj.name) {
+                player.balance += tableFund;
+            }
+        });
+        tableFund = 0;
+        console.log("=== players left === \n", playersArray.length);
+        console.log("=== River Round Winner === \n", winnerObj);
+    }
 }
+
 

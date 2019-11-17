@@ -1,11 +1,11 @@
-
+const l = require("./logging.js");
  
 let compairPlayers = (playerArray) => {
     var arrayOfLevels = [];
     playerArray.forEach(player => {
         arrayOfLevels.push(player.category.level);
     });
-    // console.log("Arrays for compare = ", arrayOfLevels);
+    l.Logger("Arrays for compare = ", arrayOfLevels);
     let levelWinner = Math.max(...arrayOfLevels);
     let winner = [];
     if (levelWinner == 0) {
@@ -16,7 +16,7 @@ let compairPlayers = (playerArray) => {
                 winner.push(player);
             }
         });
-        // console.log("winner length = ",winner.length);
+        l.Logger("winner length = ",winner.length);
         if (winner.length != 1) {
             var arrayOfHandValues = [];
             winner.forEach(player => {
@@ -29,7 +29,7 @@ let compairPlayers = (playerArray) => {
                     valueWinner.push(player);
                 }
             });
-            // console.log("valueWinner = ", valueWinner);
+            l.Logger("valueWinner = ", valueWinner);
             if (valueWinner.length != 1) {                              // get sum of hands ** i am inventing this rule, however i think it is still possible to have more than one winner **
                 let playerHandSum = [];
                 valueWinner.forEach(player => {
@@ -40,14 +40,14 @@ let compairPlayers = (playerArray) => {
                     playerHandSum.push(handSum);
                 });
                 handSumWinner = Math.max(...playerHandSum);
-                // console.log("=== return type handSumWinner === \n",valueWinner[playerHandSum.indexOf(handSumWinner)])
+                l.Logger("=== return type handSumWinner === \n",valueWinner[playerHandSum.indexOf(handSumWinner)])
                 return [valueWinner[playerHandSum.indexOf(handSumWinner)]];            
             } else {
-                // console.log("=== return type valueWinner === \n",valueWinner)
+                l.Logger("=== return type valueWinner === \n",valueWinner)
             return valueWinner;
             }
         } else {
-            // console.log("=== return type winner === \n",winner)
+            l.Logger("=== return type winner === \n",winner)
             return winner;
         }
     }

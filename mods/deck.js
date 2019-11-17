@@ -1,4 +1,5 @@
 const card = require("./card.js");
+const l = require("./logging.js");
 
 const names = card.Names;
 const suits = card.Suits;
@@ -11,12 +12,12 @@ function Deck(){
             cards.push(card.Card(j+2, name, suit));
         })
     });
-    // console.log(cards.length)
+    l.Logger(cards.length)
     return cards;
 }
 
 function Shuffle(array) {
-    // console.log("Start Shuffling ...")
+    l.Logger("Start Shuffling ...")
     let counter = array.length;
 
     // While there are elements in the array
